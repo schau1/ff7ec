@@ -1,0 +1,29 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="#">
+    <script src="scripts.js"></script>
+    <title>FF7 Ever Crisis Weapon Database</title>
+</head>
+<h1>FF7EC Weapon Database</h1>
+<div class="DatabaseSearch">
+  <button onclick="ecSearch()" class="dropbtn">Database Search</button>
+  <div id="ecDropdown" class="dropdown-content">
+    <!--<input type="text" placeholder="Weapon Search.." id="userInput">-->
+    <a onclick="filterFire()">Fire</a>
+    <a onclick="filterIce()">Ice</a>
+    <a onclick="filterLightning()">Lightning</a>
+    <a onclick="filterWater()">Water</a>
+    <a onclick="filterWind()">Wind</a>
+    <a onclick="filterEarth()">Earth</a>
+    <a onclick="filterNonElem()">Non-Elemental</a>	
+    <!--<a onclick="filterPdefUp()">PDEF Up</a>-->
+  </div>
+</div>
+<div id="Output" class="output"></div>
+
+<footer><p>Brought to you by one who doesn't have a clue what they're doing, aka. Cantiga (OnlyMatt) &#169; 2024</p></footer>
+</body>
+</html>
