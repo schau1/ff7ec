@@ -1,4 +1,4 @@
-// python -m http.server
+﻿// python -m http.server
 
 /* Trash code - Need to clean up and add comments and stuff*/
 /* When the user clicks on the button, toggle between hiding and showing the dropdown content */
@@ -91,6 +91,8 @@ function readDatabase() {
             weapData.push({ name: 'rAbility2', value: row[i][19] });
             weapData.push({ name: 'potOb10', value: row[i][20] });
             weapData.push({ name: 'maxPotOb10', value: row[i][21] });
+            weapData.push({ name: 'effect1Dur', value: row[i][22] });
+            weapData.push({ name: 'effect2Dur', value: row[i][23] });
 
             weaponDatabase.push(weapData);
 //            console.log(weapData);
@@ -165,16 +167,99 @@ function filterNonElem() {
     printElemWeapon("Non-Elemental");
 }
 
+/* I should clean this up and make only 1 function calling into all of these filters... */
+function filterMatkDown() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Debuff] MATK:";
+    printWeaponEffect("[Debuff] MATK", header);
+}
+function filterPatkDown() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Debuff] PATK:";
+    printWeaponEffect("[Debuff] PATK", header);
+}
+function filterPdefDown() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Debuff] PDEF:";
+    printWeaponEffect("[Debuff] PDEF", header);
+}
+function filterMdefDown() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Debuff] MDEF:";
+    printWeaponEffect("[Debuff] MDEF", header);
+}
+
+function filterPatkUp() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Buff] PATK:";
+    printWeaponEffect("[Buff] PATK", header);
+}
+function filterMatkUp() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Buff] MATK:";
+    printWeaponEffect("[Buff] MATK", header);
+}
+
+function filterPdefUp() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Buff] PDEF:";
+    printWeaponEffect("[Buff] PDEF", header);
+}
+function filterMdefUp() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with [Buff] MDEF:";
+    printWeaponEffect("[Buff] MDEF", header);
+}
+
+function filterCureAllMateria() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with All (Cure):";
+    printWeaponMateria("All (Cure)", header);
+}
+
+function filterCircleSigilMateria() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with ◯ Sigil:";
+    printWeaponMateria("Circle", header);
+}
+
+
+function filterTriangleSigilMateria() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with △ Sigil:";
+    printWeaponMateria("Triangle", header);
+}
+
+function filterXSigilMateria() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with ✕ Sigil:";
+    printWeaponMateria("X Sigil", header);
+}
+
+function filterDiamondMateria() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Weapon with ◊ Sigil:";
+    printWeaponSigil("Diamond", header);
+}
+
 
 function printElemWeapon(elem) {
     document.getElementById("ecDropdown").classList.toggle("show");
     readDatabase(); // if database is already loaded, won't do anything
-    let elemental = [["Weapon Name", "Char", "AOE", "Type", "Pot%", "Max%"]];   
-    let resist = [["Weapon Name", "Char", "AOE", "Type", "Elem", "Pot", "Max Pot"]];   
-    let enchant = [["Weapon Name", "Char", "AOE", "Type", "Elem", "Pot%", "Pot", "Max Pot"]];   
-    let materia = [["Weapon Name", "Char", "AOE", "Type", "Elem", "Pot%"]];   
-
-//    var elem = "Fire";
+    let elemental = [["Weapon Name", "Char", "AOE", "Type", "Pot%", "Max%"]];
     var elemResist, elemEnchant, elemMateria;
 
     if (elem == "Lightning") {
@@ -219,131 +304,157 @@ function printElemWeapon(elem) {
         }
 
         elemental.sort(elementalCompare);
-
-        if (elem != "Non-Elemental") {
-
-            if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', elemResist)) || findWeaponWithProperty(weaponDatabase[i], 'effect2', elemResist)) {
-                // Make a new row and push them into the list
-                let row = [];
-                var item = findElement(weaponDatabase[i], "name", "name");
-                row.push(item["value"]);
-
-                //            console.log(item["value"]);
-                item = findElement(weaponDatabase[i], "name", "charName");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "range");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "type");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "element");
-                row.push(item["value"]);
-
-                if (found) {
-                    item = findElement(weaponDatabase[i], "name", "effect1Pot");
-                    row.push(item["value"]);
-
-                    item = findElement(weaponDatabase[i], "name", "effect1MaxPot");
-                    row.push(item["value"]);
-                }
-                else {
-                    item = findElement(weaponDatabase[i], "name", "effect2Pot");
-                    row.push(item["value"]);
-
-                    item = findElement(weaponDatabase[i], "name", "effect2MaxPot");
-                    row.push(item["value"]);
-                }
-
-                resist.push(row);
-            }
-
-            if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', elemEnchant)) || findWeaponWithProperty(weaponDatabase[i], 'effect2', elemEnchant)) {
-                // Make a new row and push them into the list
-                let row = [];
-                var item = findElement(weaponDatabase[i], "name", "name");
-                row.push(item["value"]);
-
-                //            console.log(item["value"]);
-                item = findElement(weaponDatabase[i], "name", "charName");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "range");
-                row.push(item["value"]);
-
-
-                item = findElement(weaponDatabase[i], "name", "type");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "element");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "potOb10");
-                row.push(item["value"]);
-
-                if (found) {
-                    item = findElement(weaponDatabase[i], "name", "effect1Pot");
-                    row.push(item["value"]);
-
-                    item = findElement(weaponDatabase[i], "name", "effect1MaxPot");
-                    row.push(item["value"]);
-                }
-                else {
-                    item = findElement(weaponDatabase[i], "name", "effect2Pot");
-                    row.push(item["value"]);
-
-                    item = findElement(weaponDatabase[i], "name", "effect2MaxPot");
-                    row.push(item["value"]);
-                }
-
-                enchant.push(row);
-            }
-
-            if (findWeaponWithProperty(weaponDatabase[i], 'support1', elemMateria) ||
-                findWeaponWithProperty(weaponDatabase[i], 'support2', elemMateria) ||
-                findWeaponWithProperty(weaponDatabase[i], 'support3', elemMateria)) {
-                // Make a new row and push them into the list
-                let row = [];
-                var item = findElement(weaponDatabase[i], "name", "name");
-                row.push(item["value"]);
-
-                //            console.log(item["value"]);
-                item = findElement(weaponDatabase[i], "name", "charName");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "range");
-                row.push(item["value"]);
-
-
-                item = findElement(weaponDatabase[i], "name", "type");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "element");
-                row.push(item["value"]);
-
-                item = findElement(weaponDatabase[i], "name", "potOb10");
-                row.push(item["value"]);
-
-                materia.push(row);
-            }
-        }
     }
 
     var header = "Weapon with C-Abilities - " + elem;    
     tableCreate(elemental.length, elemental[0].length, elemental, header);
 
     if (elem != "Non-Elemental") {
-        header = "Weapon with [Debuff] " + elem + " Resist:";
-        tableCreate(resist.length, resist[0].length, resist, header);
+        header = "Weapon with [Debuff] " + elem + " Resist Down:";
+        printWeaponEffect(elemResist, header);
 
         header = "Weapon with [Buff] " + elem + " Damage Up:";
-        tableCreate(enchant.length, enchant[0].length, enchant, header);
+        printWeaponEffect(elemEnchant, header);
 
         header = "Weapon with " + elem + " Materia Slot:";
-        tableCreate(materia.length, materia[0].length, materia, header);
+        printWeaponMateria(elemMateria, header);
+  //      tableCreate(materia.length, materia[0].length, materia, header);
     }
 }
+
+function printWeaponSigil(sigil, header) {
+    readDatabase();
+    let materia = [["Weapon Name", "Char", "AOE", "Type", "Elem", "Pot%", "Max%"]];
+
+    //    console.log(elemMateria);
+
+    for (var i = 0; i < weaponDatabase.length; i++) {
+        if (findWeaponWithProperty(weaponDatabase[i], 'sigil', sigil)) {
+            // Make a new row and push them into the list
+            let row = [];
+            var item = findElement(weaponDatabase[i], "name", "name");
+            row.push(item["value"]);
+
+            //            console.log(item["value"]);
+            item = findElement(weaponDatabase[i], "name", "charName");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "range");
+            row.push(item["value"]);
+
+
+            item = findElement(weaponDatabase[i], "name", "type");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "element");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "potOb10");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "maxPotOb10");
+            row.push(item["value"]);
+
+            materia.push(row);
+        }
+    }
+
+    tableCreate(materia.length, materia[0].length, materia, header);
+}
+function printWeaponMateria(elemMateria, header) {
+    readDatabase();
+    let materia = [["Weapon Name", "Char", "AOE", "Type", "Elem", "Pot%", "Max%"]];
+
+//    console.log(elemMateria);
+
+    for (var i = 0; i < weaponDatabase.length; i++) {
+        if (findWeaponWithProperty(weaponDatabase[i], 'support1', elemMateria) ||
+            findWeaponWithProperty(weaponDatabase[i], 'support2', elemMateria) ||
+            findWeaponWithProperty(weaponDatabase[i], 'support3', elemMateria)) {
+            // Make a new row and push them into the list
+            let row = [];
+            var item = findElement(weaponDatabase[i], "name", "name");
+            row.push(item["value"]);
+
+            //            console.log(item["value"]);
+            item = findElement(weaponDatabase[i], "name", "charName");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "range");
+            row.push(item["value"]);
+
+
+            item = findElement(weaponDatabase[i], "name", "type");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "element");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "potOb10");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "maxPotOb10");
+            row.push(item["value"]);
+
+            materia.push(row);
+        }
+    }
+
+    tableCreate(materia.length, materia[0].length, materia, header);
+}
+
+function printWeaponEffect(text, header) {
+    readDatabase();
+    let effect = [["Name", "Char", "AOE", "Type", "Elem", "Pot", "Max Pot", "Duration (s)"]];  
+
+    for (var i = 0; i < weaponDatabase.length; i++) {
+        if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) || findWeaponWithProperty(weaponDatabase[i], 'effect2', text)) {
+            // Make a new row and push them into the list
+            let row = [];
+            var item = findElement(weaponDatabase[i], "name", "name");
+            row.push(item["value"]);
+
+            //            console.log(item["value"]);
+            item = findElement(weaponDatabase[i], "name", "charName");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "range");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "type");
+            row.push(item["value"]);
+
+            item = findElement(weaponDatabase[i], "name", "element");
+            row.push(item["value"]);
+
+            if (found) {
+                item = findElement(weaponDatabase[i], "name", "effect1Pot");
+                row.push(item["value"]);
+
+                item = findElement(weaponDatabase[i], "name", "effect1MaxPot");
+                row.push(item["value"]);
+
+                item = findElement(weaponDatabase[i], "name", "effect1Dur");
+                row.push(item["value"]);
+            }
+            else {
+                item = findElement(weaponDatabase[i], "name", "effect2Pot");
+                row.push(item["value"]);
+
+                item = findElement(weaponDatabase[i], "name", "effect2MaxPot");
+                row.push(item["value"]);
+
+                item = findElement(weaponDatabase[i], "name", "effect2Dur");
+                row.push(item["value"]);
+            }
+
+            effect.push(row);
+        }
+    }
+
+    tableCreate(effect.length, effect[0].length, effect, header);
+}
+
 
 // Load file from local server
 function loadFile(filePath) {
