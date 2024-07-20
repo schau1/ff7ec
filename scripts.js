@@ -3,8 +3,12 @@
 /* Trash code - Need to clean up and add comments and stuff*/
 /* When the user clicks on the button, toggle between hiding and showing the dropdown content */
 
+const FILE_NAME = 'https://schau1.github.io/ff7ec/weaponData.csv'
+//const FILE_NAME = 'http://localhost:8000/weaponData.csv'
 const WEAP_NUM_SKIP_LINE = 1;
-const MAX_POT_INDEX = 5;   // Index into the maxPot
+const ELEM_TABL_COL = 6;
+const MATERIA_TABL_COL = 7
+const MAX_POT_INDEX = 6;   // Index into the maxPot
 let weaponDatabase = [];
 function ecSearch() {  document.getElementById("ecDropdown").classList.toggle("show");
     var divToPrint = document.getElementById('Output');                       
@@ -25,22 +29,42 @@ function tableCreate(user_row, user_col, list, header) {
   
     // create <table> and a <tbody>
     var tbl = document.createElement("table");
-    tbl.id = "changeTable";
+
+    // Different format for each table 
+    if (user_col <= ELEM_TABL_COL) {
+        tbl.className = "elemTable";
+    }
+    else if (user_col == MATERIA_TABL_COL)
+    {
+        tbl.className = "materiaTable";
+    }
+    else {
+        tbl.className = "effectTable";
+    }
     var tblBody = document.createElement("tbody");
 
     // create <tr> and <td>
     for (var j = 0; j < user_row; j++) {
-    var row = document.createElement("tr");
+        var row = document.createElement("tr");
 
-    for (var i = 0; i < user_col; i++) {
-        var cell = document.createElement("td");
-        var cellText;
-        cellText = document.createTextNode(list[j][i]);
-        cell.appendChild(cellText);
-        row.appendChild(cell);
-    }
+        for (var i = 0; i < user_col; i++) {
+            var cell;
+            if (j == 0) {
+                cell = document.createElement("th");
+                cell.onclick = function () {
+                    sortTable(this);
+                };
+            }
+            else {
+                cell = document.createElement("td");
+            }
+            var cellText;
+            cellText = document.createTextNode(list[j][i]);
+            cell.appendChild(cellText);
+            row.appendChild(cell);
+        }
 
-    tblBody.appendChild(row);
+        tblBody.appendChild(row);
     }
 
     // append the <tbody> inside the <table>
@@ -52,13 +76,85 @@ function tableCreate(user_row, user_col, list, header) {
     // tbl border attribute to 
     tbl.setAttribute("border", "2");  
 }
+
+function sortTable(cell) {
+    // Grab the table node
+    var table = cell.parentNode.parentNode;
+    var col = 0;
+    var asc = true;
+    var swap = true;
+    var shouldSwap = false;
+    var count = 0;
+    var isNumber = false;
+
+    for (var i = 0; i < table.rows[0].cells.length; i++) {
+        if (table.rows[0].cells[i].innerHTML == cell.innerHTML) {
+            col = i;
+            if (cell.innerHTML == "Pot%" || cell.innerHTML == "Max%" || cell.innerHTML == "Duration (s)"
+                || cell.innerHTML == "% per ATB") {
+                isNumber = true;
+            }
+        }
+    }
+
+    while (swap) {
+        swap = false;
+        var rows = table.rows;
+
+        // Skip header row
+        for (var i = 1; i < (rows.length - 1); i++) {
+            shouldSwap = false;
+            // get current row and the next row
+            var x = rows[i].getElementsByTagName("td")[col];
+            var y = rows[i + 1].getElementsByTagName("td")[col];
+            var xValue = x, yValue = y;
+
+            if (isNumber) {
+                xValue = parseFloat(x.innerHTML);
+                yValue = parseFloat(y.innerHTML);
+            }
+            else {
+                xValue = x.innerHTML;
+                yValue = y.innerHTML;
+            }
+
+            if (asc) {
+                // Check if switch based on ascendence 
+
+                if (xValue > yValue) {
+                    shouldSwap = true;
+                    break;
+                }
+            }
+            else {
+                // Check if switch based on descendence 
+                if (xValue < yValue) {
+                    shouldSwap = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwap) {
+            // Swap
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            swap = true;
+            count++;
+        }
+        else {
+            if (count == 0 && asc) {
+                asc = false;
+                swap = true;
+            }
+        }
+    }   
+                    
+}
 function readDatabase() {
     if (weaponDatabase[0] != null) {
         return;
     }
 
-    //    result = loadFile('http://localhost:8000/weaponData.csv');
-    result = loadFile('https://schau1.github.io/ff7ec/weaponData.csv');
+    result = loadFile(FILE_NAME);
 
     if (result != null) {
         // By lines
@@ -112,14 +208,6 @@ function findElement(arr, propName, propValue) {
 function findWeaponWithProperty(arr, propName, propValue) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i].name == propName) {
-      /*      if (propName == "effect1") {
-                if (arr[i].value == "[Resist] Fire -") {
-                    console.log(arr[i].value);
-                    console.log(propValue);
-                    console.log(arr[i].value.indexOf(propValue));
-                }
-
-            }*/
             if (arr[i].value.indexOf(propValue) >= 0) {
                 return true;
             }
@@ -222,7 +310,7 @@ function filterMdefUp() {
 function filterCureAllMateria() {
     document.getElementById("ecDropdown").classList.toggle("show");
 
-    var header = "Weapon with All (Cure):";
+    var header = "Weapon with All (Cure) Materia Slot:";
     printWeaponMateria("All (Cure)", header);
 }
 
@@ -255,11 +343,10 @@ function filterDiamondMateria() {
     printWeaponSigil("Diamond", header);
 }
 
-
 function printElemWeapon(elem) {
     document.getElementById("ecDropdown").classList.toggle("show");
     readDatabase(); // if database is already loaded, won't do anything
-    let elemental = [["Weapon Name", "Char", "AOE", "Type", "Pot%", "Max%"]];
+    let elemental = [["Weapon Name", "Char", "AOE", "Type", "ATB", "Pot%", "Max%", "% per ATB"]];
     var elemResist, elemEnchant, elemMateria;
 
     if (elem == "Lightning") {
@@ -282,23 +369,33 @@ function printElemWeapon(elem) {
             var item = findElement(weaponDatabase[i], "name", "name");
             row.push(item["value"]);
 
-            //            console.log(item["value"]);
             item = findElement(weaponDatabase[i], "name", "charName");
             row.push(item["value"]);
 
             item = findElement(weaponDatabase[i], "name", "range");
             row.push(item["value"]);
 
-
             item = findElement(weaponDatabase[i], "name", "type");
             row.push(item["value"]);
 
+            item = findElement(weaponDatabase[i], "name", "atb");
+            row.push(item["value"]);
+
+            var atb = item["value"];
 
             item = findElement(weaponDatabase[i], "name", "potOb10");
             row.push(item["value"]);
 
             item = findElement(weaponDatabase[i], "name", "maxPotOb10");
             row.push(item["value"]);
+
+            if (atb != 0) {
+                row.push((item["value"]/atb).toFixed(0));
+            }
+            else {
+                row.push(item["value"]);
+            }
+
 
             elemental.push(row);
         }
@@ -318,7 +415,6 @@ function printElemWeapon(elem) {
 
         header = "Weapon with " + elem + " Materia Slot:";
         printWeaponMateria(elemMateria, header);
-  //      tableCreate(materia.length, materia[0].length, materia, header);
     }
 }
 
@@ -405,7 +501,7 @@ function printWeaponMateria(elemMateria, header) {
 
 function printWeaponEffect(text, header) {
     readDatabase();
-    let effect = [["Name", "Char", "AOE", "Type", "Elem", "Pot", "Max Pot", "Duration (s)"]];  
+    let effect = [["Name", "Char", "AOE", "Type", "Elem", "Target", "Pot", "Max Pot", "Duration (s)"]];  
 
     for (var i = 0; i < weaponDatabase.length; i++) {
         if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) || findWeaponWithProperty(weaponDatabase[i], 'effect2', text)) {
@@ -428,6 +524,9 @@ function printWeaponEffect(text, header) {
             row.push(item["value"]);
 
             if (found) {
+                item = findElement(weaponDatabase[i], "name", "effect1Target");
+                row.push(item["value"]);  
+
                 item = findElement(weaponDatabase[i], "name", "effect1Pot");
                 row.push(item["value"]);
 
@@ -438,6 +537,9 @@ function printWeaponEffect(text, header) {
                 row.push(item["value"]);
             }
             else {
+                item = findElement(weaponDatabase[i], "name", "effect2Target");
+                row.push(item["value"]);  
+
                 item = findElement(weaponDatabase[i], "name", "effect2Pot");
                 row.push(item["value"]);
 
