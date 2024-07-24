@@ -97,8 +97,20 @@ footer {
   margin-bottom: 1px;
 }
 
-.elemTable td:not(:first-child) {
+.elemTable td:first-child{
   width: 15%;
+  overflow: hidden;  	
+  white-space:nowrap;
+}
+
+.elemTable td:last-child{
+  width: 15%;
+  overflow: hidden;  
+  white-space:nowrap;
+}
+
+.elemTable td:not(:first-child), td:not(:last-child){
+  width: 5%;
   overflow: hidden;  
 }
 
@@ -115,8 +127,13 @@ footer {
   margin-bottom: 1px;
 }
 
+.materiaTable td:nth-child(1) {
+  width: 20%;
+  overflow: hidden;  
+}
+
 .materiaTable td:not(:first-child) {
-  width: 13%;
+  width: 8%;
   overflow: hidden;  
 }
 

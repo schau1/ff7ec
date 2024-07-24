@@ -6,8 +6,8 @@
 const FILE_NAME = 'https://schau1.github.io/ff7ec/weaponData.csv'
 //const FILE_NAME = 'http://localhost:8000/weaponData.csv'
 const WEAP_NUM_SKIP_LINE = 1;
-const ELEM_TABL_COL = 6;
-const MATERIA_TABL_COL = 7
+const ELEM_TABL_COL = 9;    
+const MATERIA_TABL_COL = 7;
 const MAX_POT_INDEX = 6;   // Index into the maxPot
 let weaponDatabase = [];
 function ecSearch() {  document.getElementById("ecDropdown").classList.toggle("show");
@@ -31,7 +31,7 @@ function tableCreate(user_row, user_col, list, header) {
     var tbl = document.createElement("table");
 
     // Different format for each table 
-    if (user_col <= ELEM_TABL_COL) {
+    if (user_col >= ELEM_TABL_COL) {
         tbl.className = "elemTable";
     }
     else if (user_col == MATERIA_TABL_COL)
@@ -189,6 +189,8 @@ function readDatabase() {
             weapData.push({ name: 'maxPotOb10', value: row[i][21] });
             weapData.push({ name: 'effect1Dur', value: row[i][22] });
             weapData.push({ name: 'effect2Dur', value: row[i][23] });
+            weapData.push({ name: 'condition1', value: row[i][24] });
+            weapData.push({ name: 'condition2', value: row[i][25] });
 
             weaponDatabase.push(weapData);
 //            console.log(weapData);
@@ -252,7 +254,7 @@ function filterEarth() {
 }
 
 function filterNonElem() {
-    printElemWeapon("Non-Elemental");
+    printElemWeapon("None");
 }
 
 /* I should clean this up and make only 1 function calling into all of these filters... */
@@ -346,7 +348,7 @@ function filterDiamondMateria() {
 function printElemWeapon(elem) {
     document.getElementById("ecDropdown").classList.toggle("show");
     readDatabase(); // if database is already loaded, won't do anything
-    let elemental = [["Weapon Name", "Char", "AOE", "Type", "ATB", "Pot%", "Max%", "% per ATB"]];
+    let elemental = [["Weapon Name", "Char", "AOE", "Type", "ATB", "Pot%", "Max%", "% per ATB", "Condition"]];
     var elemResist, elemEnchant, elemMateria;
 
     if (elem == "Lightning") {
@@ -385,9 +387,11 @@ function printElemWeapon(elem) {
 
             item = findElement(weaponDatabase[i], "name", "potOb10");
             row.push(item["value"]);
+            var pot = parseFloat(item["value"]);
 
             item = findElement(weaponDatabase[i], "name", "maxPotOb10");
             row.push(item["value"]);
+            var maxPot = parseFloat(item["value"]);
 
             if (atb != 0) {
                 row.push((item["value"]/atb).toFixed(0));
@@ -396,6 +400,13 @@ function printElemWeapon(elem) {
                 row.push(item["value"]);
             }
 
+            if (maxPot > pot) {
+                item = findElement(weaponDatabase[i], "name", "condition1");
+                row.push(item["value"]);
+            }
+            else {
+                row.push("");
+            }
 
             elemental.push(row);
         }
@@ -406,7 +417,7 @@ function printElemWeapon(elem) {
     var header = "Weapon with C-Abilities - " + elem;    
     tableCreate(elemental.length, elemental[0].length, elemental, header);
 
-    if (elem != "Non-Elemental") {
+    if (elem != "None") {
         header = "Weapon with [Debuff] " + elem + " Resist Down:";
         printWeaponEffect(elemResist, header);
 
@@ -501,7 +512,7 @@ function printWeaponMateria(elemMateria, header) {
 
 function printWeaponEffect(text, header) {
     readDatabase();
-    let effect = [["Name", "Char", "AOE", "Type", "Elem", "Target", "Pot", "Max Pot", "Duration (s)"]];  
+    let effect = [["Name", "Char", "AOE", "Type", "Elem", "Target", "Pot", "Max Pot", "Duration (s)", "Condition"]];  
 
     for (var i = 0; i < weaponDatabase.length; i++) {
         if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) || findWeaponWithProperty(weaponDatabase[i], 'effect2', text)) {
@@ -535,6 +546,9 @@ function printWeaponEffect(text, header) {
 
                 item = findElement(weaponDatabase[i], "name", "effect1Dur");
                 row.push(item["value"]);
+
+                item = findElement(weaponDatabase[i], "name", "condition1");
+                row.push(item["value"]);
             }
             else {
                 item = findElement(weaponDatabase[i], "name", "effect2Target");
@@ -547,6 +561,9 @@ function printWeaponEffect(text, header) {
                 row.push(item["value"]);
 
                 item = findElement(weaponDatabase[i], "name", "effect2Dur");
+                row.push(item["value"]);
+
+                item = findElement(weaponDatabase[i], "name", "condition2");
                 row.push(item["value"]);
             }
 
