@@ -77,12 +77,24 @@ footer {
   font-size: 18px;
   font-weight: bold;
   margin-top: 0px;
-  margin-bottom: 1px;
+  margin-bottom: 1px; 
+}
+
+.effectTable td:first-child {
+  width: 10%;
+  overflow: hidden;  
+  white-space:nowrap;   
+}
+
+.effectTable td:last-child{
+  width: 10%;
+  overflow: hidden;  
+  white-space:nowrap;
 }
 
 .effectTable td:not(:first-child) {
-  width: 10%;
-  overflow: hidden;  
+  width: 5%;
+  overflow: hidden;    
 }
 
 .effectTable {
@@ -118,6 +130,29 @@ footer {
   width: 70%;
 }
 
+.uniqueTable tr:first-child {
+  font-family: arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 1px;
+}
+
+.uniqueTable td:first-child{
+  width: 10%;
+  overflow: hidden;  	
+  white-space:nowrap;
+}
+.uniqueTable td:not(:first-child), td:not(:last-child){
+  width: 5%;
+  overflow: hidden;  
+  white-space:nowrap;  
+}
+
+.uniqueTable {
+  width: 70%;
+}
+
 
 .materiaTable tr:first-child {
   font-family: arial, sans-serif;
@@ -138,6 +173,41 @@ footer {
 }
 
 .materiaTable {
+  width: 70%;
+}
+
+.statusTable tr:first-child {
+  font-family: arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 1px;
+}
+
+.statusTable td:first-child{
+  width: 15%;
+  overflow: hidden;  	
+  white-space:nowrap;
+}
+
+.statusTable td:last-child{
+  width: 15%;
+  overflow: hidden;  
+  white-space:nowrap;
+}
+
+.statusTable td:not(:first-child), td:not(:last-child){
+  width: 5%;
+  overflow: hidden;  
+}
+
+.statusTable td:nth-child(7){
+  width: 15%;
+  overflow: hidden;  
+  white-space:nowrap;
+}
+
+.statusTable {
   width: 70%;
 }
 
