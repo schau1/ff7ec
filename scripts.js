@@ -7,9 +7,9 @@ const FILE_NAME = 'https://schau1.github.io/ff7ec/weaponData.csv'
 //const FILE_NAME = 'http://localhost:8000/weaponData.csv'
 const WEAP_NUM_SKIP_LINE = 1;
 const ELEM_TABL_COL = 9;   
-const STATUS_TABL_COL = 8;
-const MATERIA_TABL_COL = 7;
-const UNIQUE_TABL_COL = 11;
+const STATUS_TABL_COL = 9;
+const MATERIA_TABL_COL = 8;
+const UNIQUE_TABL_COL = 12;
 const MAX_POT_INDEX = 6;   // Index into the maxPot for sorting
 let weaponDatabase = [];
 function ecSearch() {  document.getElementById("ecDropdown").classList.toggle("show");
@@ -481,7 +481,7 @@ function printWeaponElem(elem, header) {
 
 function printWeaponSigil(sigil, header) {
     readDatabase();
-    let materia = [["Weapon Name", "Char", "AOE", "Type", "Elem", "Pot%", "Max%"]];
+    let materia = [["Weapon Name", "Char", "AOE", "Type", "Elem", "ATB", "Pot%", "Max%"]];
 
     for (var i = 0; i < weaponDatabase.length; i++) {
         if (findWeaponWithProperty(weaponDatabase[i], 'sigil', sigil)) {
@@ -492,6 +492,7 @@ function printWeaponSigil(sigil, header) {
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "range"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "element"));
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "atb"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "potOb10"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "maxPotOb10"));
 
@@ -503,7 +504,7 @@ function printWeaponSigil(sigil, header) {
 }
 function printWeaponMateria(elemMateria, header) {
     readDatabase();
-    let materia = [["Weapon Name", "Char", "AOE", "Type", "Elem", "Pot%", "Max%"]];
+    let materia = [["Weapon Name", "Char", "AOE", "Type", "Elem", "ATB", "Pot%", "Max%"]];
 
     for (var i = 0; i < weaponDatabase.length; i++) {
         if (findWeaponWithProperty(weaponDatabase[i], 'support1', elemMateria) ||
@@ -516,6 +517,7 @@ function printWeaponMateria(elemMateria, header) {
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "range"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "element"));
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "atb"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "potOb10"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "maxPotOb10"));
 
@@ -588,7 +590,7 @@ function printRegenWeapon(header) {
 
 function printWeaponEffect(text, header) {
     readDatabase();
-    let effect = [["Name", "Char", "AOE", "Type", "Elem", "Target", "Pot", "Max Pot", "Duration (s)", "Condition"]];  
+    let effect = [["Name", "Char", "AOE", "Type", "Elem", "ATB", "Target", "Pot", "Max Pot", "Duration (s)", "Condition"]];  
 
     for (var i = 0; i < weaponDatabase.length; i++) {
         if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) || findWeaponWithProperty(weaponDatabase[i], 'effect2', text)) {
@@ -600,6 +602,7 @@ function printWeaponEffect(text, header) {
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "range"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "element"));
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "atb"));
 
             if (found) {
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Target"));  
@@ -625,7 +628,7 @@ function printWeaponEffect(text, header) {
 
 function printWeaponUniqueEffect(text, header) {
     readDatabase();
-    let effect = [["Name", "Char", "AOE", "Type", "Elem", "Target1", "Effect1", "Condition1", "Target2", "Effect2", "Condition2"]];
+    let effect = [["Name", "Char", "AOE", "Type", "Elem", "ATB", "Target1", "Effect1", "Condition1", "Target2", "Effect2", "Condition2"]];
 
     for (var i = 0; i < weaponDatabase.length; i++) {
         if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) ||
@@ -637,7 +640,7 @@ function printWeaponUniqueEffect(text, header) {
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "range"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "element"));
-
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "atb"));
 
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Target"));
             var str = getValueFromDatabaseItem(weaponDatabase[i], "effect1");
