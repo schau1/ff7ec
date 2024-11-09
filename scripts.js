@@ -189,28 +189,36 @@ function readDatabase() {
             weapData.push({ name: 'effect2', value: row[i][12] });
             weapData.push({ name: 'effect2Pot', value: row[i][13] });
             weapData.push({ name: 'effect2MaxPot', value: row[i][14] });
-            weapData.push({ name: 'support1', value: row[i][15] });
-            weapData.push({ name: 'support2', value: row[i][16] });
-            weapData.push({ name: 'support3', value: row[i][17] });
-            weapData.push({ name: 'rAbility1', value: row[i][18] });
-            weapData.push({ name: 'rAbility2', value: row[i][19] });
-            weapData.push({ name: 'potOb10', value: row[i][20] });
-            weapData.push({ name: 'maxPotOb10', value: row[i][21] });
-            weapData.push({ name: 'effect1Dur', value: row[i][22] });
-            weapData.push({ name: 'effect2Dur', value: row[i][23] });
-            weapData.push({ name: 'condition1', value: row[i][24] });
-            weapData.push({ name: 'condition2', value: row[i][25] });
-            weapData.push({ name: 'effectRange', value: row[i][40] });
+            var m = 15;
+            weapData.push({ name: 'effect3Target', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect3', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect3Pot', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect3MaxPot', value: row[i][m] }); m++;
+            weapData.push({ name: 'support1', value: row[i][m] }); m++;
+            weapData.push({ name: 'support2', value: row[i][m] }); m++;
+            weapData.push({ name: 'support3', value: row[i][m] }); m++;
+            weapData.push({ name: 'rAbility1', value: row[i][m] }); m++;
+            weapData.push({ name: 'rAbility2', value: row[i][m] }); m++;
+            weapData.push({ name: 'potOb10', value: row[i][m] }); m++;
+            weapData.push({ name: 'maxPotOb10', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect1Dur', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect2Dur', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect3Dur', value: row[i][m] }); m++;
+            weapData.push({ name: 'condition1', value: row[i][m] }); m++;
+            weapData.push({ name: 'condition2', value: row[i][m] }); m++;
+            weapData.push({ name: 'condition3', value: row[i][m] }); m += 15;
+            weapData.push({ name: 'effectRange', value: row[i][m] }); m++;
 
-            if (row[i][41] == 0) {
+            if (row[i][m] == 0) {
                 weapData.push({ name: 'uses', value: "No Limit" });
             }
             else {
-                weapData.push({ name: 'uses', value: row[i][41] });
+                weapData.push({ name: 'uses', value: row[i][m] });
             }
+            m++;
 
             weaponDatabase.push(weapData);
-//            console.log(weapData);
+            console.log(weapData);
         }
     }
 }
@@ -608,7 +616,8 @@ function printWeaponEffect(text, header) {
     let effect = [["Name", "Char", "AOE", "Type", "Elem", "ATB", "Uses", "Target", "Pot", "Max Pot", "Duration (s)", "Condition"]];  
 
     for (var i = 0; i < weaponDatabase.length; i++) {
-        if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) || findWeaponWithProperty(weaponDatabase[i], 'effect2', text)) {
+        if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) || (found2 = findWeaponWithProperty(weaponDatabase[i], 'effect2', text))
+            || findWeaponWithProperty(weaponDatabase[i], 'effect3', text)) {
             // Make a new row and push them into the list
             let row = [];
 
@@ -627,12 +636,19 @@ function printWeaponEffect(text, header) {
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Dur"));
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
             }
-            else {
+            else if (found2) {
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Target"));  
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Pot"));
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2MaxPot"));
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Dur"));
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition2"));
+            }
+            else {
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect3Target"));
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect3Pot"));
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect3MaxPot"));
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect3Dur"));
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition3"));
             }
 
             effect.push(row);
