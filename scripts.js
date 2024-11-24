@@ -30,24 +30,26 @@ function tableCreate(user_row, user_col, list, header) {
   
     // create <table> and a <tbody>
     var tbl = document.createElement("table");
+    let tblClassName;
 
     // Different format for each table 
     if (user_col == ELEM_TABL_COL) {
-        tbl.className = "elemTable";
+        tblClassName = "elemTable";
     }
     else if (user_col == MATERIA_TABL_COL) {
-        tbl.className = "materiaTable";
+        tblClassName = "materiaTable";
     }
     else if (user_col == STATUS_TABL_COL) {
-        tbl.className = "statusTable";
+        tblClassName = "statusTable";
     }
     else if (user_col == UNIQUE_TABL_COL) {
-        tbl.className = "uniqueTable";
+        tblClassName = "uniqueTable";
     }
     else
     {
-        tbl.className = "effectTable";
+        tblClassName = "effectTable";
     }
+    tbl.className = tblClassName;
     var tblBody = document.createElement("tbody");
 
     // create <tr> and <td>
@@ -82,6 +84,7 @@ function tableCreate(user_row, user_col, list, header) {
 
     // tbl border attribute to 
     tbl.setAttribute("border", "2");  
+    new DataTable('#' + tblClassName);
 }
 
 function sortTable(cell) {
