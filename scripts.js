@@ -27,29 +27,38 @@ function tableCreate(user_row, user_col, list, header) {
     h1.className = "weaponHeader";
     h1.appendChild(textNode);
     body.appendChild(h1);
+
+    console.log("Table Data:", list);
   
     // create <table> and a <tbody>
     var tbl = document.createElement("table");
+    let tblClassName;
 
     // Different format for each table 
     if (user_col == ELEM_TABL_COL) {
-        tbl.className = "elemTable";
+        tblClassName = "elemTable";
     }
     else if (user_col == MATERIA_TABL_COL) {
-        tbl.className = "materiaTable";
+        tblClassName = "materiaTable";
     }
     else if (user_col == STATUS_TABL_COL) {
-        tbl.className = "statusTable";
+        tblClassName = "statusTable";
     }
     else if (user_col == UNIQUE_TABL_COL) {
-        tbl.className = "uniqueTable";
+        tblClassName = "uniqueTable";
     }
     else
     {
-        tbl.className = "effectTable";
+        tblClassName = "effectTable";
     }
-    var tblBody = document.createElement("tbody");
+    tbl.className = tblClassName + " cell-border display compact hover order-column stripe";
 
+    let tblId = tblClassName + Math.random().toString(36).substr(2, 9); // Generate a unique ID for each table
+    tbl.id = tblId;
+    var tblBody = document.createElement("tbody");
+    console.log("Creating table: " + tblClassName);
+
+    var headerRow = document.createElement("tr");
     // create <tr> and <td>
     for (var j = 0; j < user_row; j++) {
         var row = document.createElement("tr");
@@ -58,30 +67,35 @@ function tableCreate(user_row, user_col, list, header) {
             var cell;
             if (j == 0) {
                 cell = document.createElement("th");
-                cell.onclick = function () {
-                    sortTable(this);
-                };
+                headerRow.appendChild(cell);
             }
             else {
                 cell = document.createElement("td");
+                row.appendChild(cell);
             }
             var cellText;
-            cellText = document.createTextNode(list[j][i]);
+            cellText = document.createTextNode(list[j][i] || ""); 
             cell.appendChild(cellText);
-            row.appendChild(cell);
+            
         }
-
-        tblBody.appendChild(row);
+        if (j > 0) {
+            tblBody.appendChild(row);
+        }
     }
 
     // append the <tbody> inside the <table>
+    var tblHead = document.createElement("thead");
+    tblHead.appendChild(headerRow);
+    tbl.appendChild(tblHead);
     tbl.appendChild(tblBody);
 
     // put <table> in the <body>
     body.appendChild(tbl);
 
-    // tbl border attribute to 
-    tbl.setAttribute("border", "2");  
+    new DataTable('#' + tblId, {
+        paging: false
+    });
+    console.log("Created table: " + tblClassName);
 }
 
 function sortTable(cell) {
@@ -218,7 +232,7 @@ function readDatabase() {
             m++;
 
             weaponDatabase.push(weapData);
-            console.log(weapData);
+            // console.log(weapData);
         }
     }
 }
