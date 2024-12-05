@@ -362,6 +362,15 @@ function filterHeal() {
     var header = "Weapon with All (Cure) Materia Slot:";
     printWeaponMateria("All (Cure)", header);
 }
+function filterProvoke() {
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Provoke Weapon:";
+    printWeaponEffect("[Buff] Provoke", header);
+
+    var header = "Veil Weapon:";
+    printWeaponEffect("[Buff] Veil", header);
+}
 
 function filterCircleSigilMateria() {
     document.getElementById("ecDropdown").classList.toggle("show");
@@ -495,7 +504,8 @@ function printWeaponElem(elem, header) {
 
             if (elem != "Heal") {
                 // @todo: Need to figure out a good way to deal with this stupid weapon
-                if ((maxPot > pot) || (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Bahamut Greatsword")){
+                if ((maxPot > pot) || (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Bahamut Greatsword") || 
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Sabin's Claws")) {
                     row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
                 }
                 else {
