@@ -372,6 +372,13 @@ function filterProvoke() {
     printWeaponEffect("[Buff] Veil", header);
 }
 
+function filterExploitWeakness(){
+    document.getElementById("ecDropdown").classList.toggle("show");
+
+    var header = "Exploit Weakness Weapon:";
+    printWeaponEffect("[Buff] Weakness", header);
+}
+
 function filterCircleSigilMateria() {
     document.getElementById("ecDropdown").classList.toggle("show");
 
@@ -416,8 +423,8 @@ function filterUniqueEffect() {
     header = "Weapon with Haste Effect:";
     printWeaponEffect("Haste", header);
 
-    header = "Weapon with Unique Effect:";
-    printWeaponUniqueEffect("[Unique+]", header);
+    header = "Weapon with Increase Command Gauge Effect:";
+    printWeaponEffect("Increases Command Gauge", header);
 }
 
 function printElemWeapon(elem) {
