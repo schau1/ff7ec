@@ -221,7 +221,8 @@ function readDatabase() {
             weapData.push({ name: 'condition1', value: row[i][m] }); m++;
             weapData.push({ name: 'condition2', value: row[i][m] }); m++;
             weapData.push({ name: 'condition3', value: row[i][m] }); m += 15;
-            weapData.push({ name: 'effectRange', value: row[i][m] }); m++;
+            weapData.push({ name: 'effectRange', value: row[i][m] }); m += 3;
+            weapData.push({ name: 'gachaType', value: row[i][m] }); m++;
 
             if (row[i][m] == 0) {
                 weapData.push({ name: 'uses', value: "No Limit" });
@@ -296,6 +297,10 @@ function filterEarth() {
 
 function filterNonElem() {
     printElemWeapon("None");
+}
+
+function filterLimited() {
+    printLimitedWeapon("", "Limited/Crossover Weapons:");
 }
 
 /* I should clean this up and make only 1 function calling into all of these filters... */
@@ -455,6 +460,64 @@ function printElemWeapon(elem) {
         header = "Weapon with " + elem + " Materia Slot:";
         printWeaponMateria(elemMateria, header);
     }
+}
+
+function printLimitedWeapon(elem, header) {
+    document.getElementById("ecDropdown").classList.toggle("show");
+    readDatabase();
+    let elemental;
+    elemental = [["Weapon Name", "Char", "AOE", "Type", "ATB", "Element", "Pot%", "Max%", "% per ATB", "Condition"]];
+
+    for (var i = 0; i < weaponDatabase.length; i++) {
+        var found = findWeaponWithProperty(weaponDatabase[i], 'gachaType', "L");
+        if (found) {
+            // Make a new row and push them into the list
+            let row = [];
+
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "name"));
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "charName"));
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "range"));
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
+
+            var atb = getValueFromDatabaseItem(weaponDatabase[i], "atb");
+            row.push(atb);
+
+            row.push(getValueFromDatabaseItem(weaponDatabase[i], "element"));
+ 
+            var pot, maxPot;
+
+            pot = parseInt(getValueFromDatabaseItem(weaponDatabase[i], "potOb10"));
+            row.push(pot);
+
+            maxPot = parseInt(getValueFromDatabaseItem(weaponDatabase[i], "maxPotOb10"));
+            row.push(maxPot);
+
+            // % per ATB
+            if (atb != 0) {
+                row.push((maxPot / atb).toFixed(0));
+            }
+            else {
+                row.push(maxPot);
+            }
+
+            if (elem != "Heal") {
+                // @todo: Need to figure out a good way to deal with this stupid weapon
+                if ((maxPot > pot) || (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Bahamut Greatsword") ||
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Sabin's Claws")) {
+                    row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
+                }
+                else {
+                    row.push("");
+                }
+            }
+
+            elemental.push(row);
+        }
+
+        elemental.sort(elementalCompare);
+    }
+
+    tableCreate(elemental.length, elemental[0].length, elemental, header);
 }
 
 function printWeaponElem(elem, header) {
