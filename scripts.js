@@ -221,8 +221,7 @@ function readDatabase() {
             weapData.push({ name: 'condition1', value: row[i][m] }); m++;
             weapData.push({ name: 'condition2', value: row[i][m] }); m++;
             weapData.push({ name: 'condition3', value: row[i][m] }); m += 15;
-            weapData.push({ name: 'effectRange', value: row[i][m] }); m += 3;
-            weapData.push({ name: 'gachaType', value: row[i][m] }); m++;
+            weapData.push({ name: 'effectRange', value: row[i][m] }); m++;
 
             if (row[i][m] == 0) {
                 weapData.push({ name: 'uses', value: "No Limit" });
@@ -231,6 +230,9 @@ function readDatabase() {
                 weapData.push({ name: 'uses', value: row[i][m] });
             }
             m++;
+            m++; // id
+
+            weapData.push({ name: 'gachaType', value: row[i][m] }); m++;
 
             weaponDatabase.push(weapData);
             // console.log(weapData);
@@ -503,7 +505,9 @@ function printLimitedWeapon(elem, header) {
             if (elem != "Heal") {
                 // @todo: Need to figure out a good way to deal with this stupid weapon
                 if ((maxPot > pot) || (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Bahamut Greatsword") ||
-                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Sabin's Claws")) {
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Sabin's Claws") || 
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Blade of the Worthy") || 
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Umbral Blade")) {
                     row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
                 }
                 else {
