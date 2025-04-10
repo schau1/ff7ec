@@ -508,7 +508,13 @@ function printLimitedWeapon(elem, header) {
                     (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Sabin's Claws") || 
                     (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Blade of the Worthy") || 
                     (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Umbral Blade")) {
-                    row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
+                    // Check to see if DMG+ Condition is from Effect1 or Effect2 
+                    if (findWeaponWithProperty(weaponDatabase[i], 'effect1', "DMG")) {
+                        row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
+                    }
+                    else {
+                        row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition2"));
+                    }
                 }
                 else {
                     row.push("");
@@ -578,9 +584,17 @@ function printWeaponElem(elem, header) {
 
             if (elem != "Heal") {
                 // @todo: Need to figure out a good way to deal with this stupid weapon
-                if ((maxPot > pot) || (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Bahamut Greatsword") || 
-                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Sabin's Claws")) {
-                    row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
+                if ((maxPot > pot) || (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Bahamut Greatsword") ||
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Sabin's Claws") ||
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Blade of the Worthy") ||
+                    (getValueFromDatabaseItem(weaponDatabase[i], "name") == "Umbral Blade")) {
+                    // Check to see if DMG+ Condition is from Effect1 or Effect2 
+                    if (findWeaponWithProperty(weaponDatabase[i], 'effect1', "DMG")) {
+                        row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition1"));
+                    }
+                    else {
+                        row.push(getValueFromDatabaseItem(weaponDatabase[i], "condition2"));
+                    }
                 }
                 else {
                     row.push("");
