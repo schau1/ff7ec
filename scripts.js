@@ -221,7 +221,7 @@ function readDatabase() {
             weapData.push({ name: 'condition1', value: row[i][m] }); m++;
             weapData.push({ name: 'condition2', value: row[i][m] }); m++;
             weapData.push({ name: 'condition3', value: row[i][m] }); m += 15;
-            weapData.push({ name: 'effectRange', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect1Range', value: row[i][m] }); m++;
 
             if (row[i][m] == 0) {
                 weapData.push({ name: 'uses', value: "No Limit" });
@@ -233,6 +233,8 @@ function readDatabase() {
             m++; // id
 
             weapData.push({ name: 'gachaType', value: row[i][m] }); m++;
+            weapData.push({ name: 'effect2Range', value: row[i][m] }); m++;
+
 
             weaponDatabase.push(weapData);
             // console.log(weapData);
@@ -664,7 +666,7 @@ function printWeaponMateria(elemMateria, header) {
 
 function printRegenWeapon(header) {
     readDatabase();
-    let effect = [["Name", "Char", "AOE", "Type", "ATB", "Uses", "Target", "Duration (s)", "Pot%", "Max%", "% per ATB"]];
+    let effect = [["Name", "Char", "Type", "ATB", "Uses", "AOE", "Target", "Duration (s)", "Pot%", "Max%", "% per ATB"]];
     var text = "Regen";
 
     for (var i = 0; i < weaponDatabase.length; i++) {
@@ -675,7 +677,6 @@ function printRegenWeapon(header) {
 
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "name"));
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "charName"));
-                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effectRange"));
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
 
                 var atb = getValueFromDatabaseItem(weaponDatabase[i], "atb");
@@ -685,6 +686,12 @@ function printRegenWeapon(header) {
 
                 var dur, pot, maxPot;
 
+                if (found) {
+                    row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Range"));
+                }
+                else {
+                    row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Range"));
+                }
                 if (found) {
                     row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Target"));
 
@@ -725,8 +732,7 @@ function printRegenWeapon(header) {
 
 function printWeaponEffect(text, header) {
     readDatabase();
-    let effect = [["Name", "Char", "AOE", "Type", "Elem", "ATB", "Uses", "Target", "Pot", "Max Pot", "Duration (s)", "Condition"]];  
-
+    let effect = [["Name", "Char", "Type", "Elem", "ATB", "Uses", "AOE", "Target", "Pot", "Max Pot", "Duration (s)", "Condition"]];  
     for (var i = 0; i < weaponDatabase.length; i++) {
         if ((found = findWeaponWithProperty(weaponDatabase[i], 'effect1', text)) || (found2 = findWeaponWithProperty(weaponDatabase[i], 'effect2', text))
             || findWeaponWithProperty(weaponDatabase[i], 'effect3', text)) {
@@ -735,12 +741,21 @@ function printWeaponEffect(text, header) {
 
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "name"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "charName"));
-            row.push(getValueFromDatabaseItem(weaponDatabase[i], "effectRange"));
+
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "element"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "atb"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "uses"));
 
+            if (found) {
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Range"));
+            }
+            else if (found2) {
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Range"));
+            }
+            else {
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Range"));
+            }
             if (found) {
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Target"));  
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Pot"));
@@ -781,7 +796,13 @@ function printWeaponUniqueEffect(text, header) {
 
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "name"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "charName"));
-            row.push(getValueFromDatabaseItem(weaponDatabase[i], "effectRange"));
+            if (found) {
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Range"));
+            }
+            else {
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Range"));
+            }
+
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "type"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "element"));
             row.push(getValueFromDatabaseItem(weaponDatabase[i], "atb"));
