@@ -840,7 +840,7 @@ function printWeaponEffect(text, header) {
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Range"));
             }
             else {
-                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Range"));
+                row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect2Range"));
             }
             if (found) {
                 row.push(getValueFromDatabaseItem(weaponDatabase[i], "effect1Target"));  
